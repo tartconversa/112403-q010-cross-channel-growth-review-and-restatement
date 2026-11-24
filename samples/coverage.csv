@@ -1,0 +1,4 @@
+entity,kind,group,state,from,to,version
+S1,store,east,comparable,2026-01-01,,1
+S2,store,west,new,2026-07-01,,1
+P1,sku,skincare,reclassified,2026-08-01,,2

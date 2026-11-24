@@ -1,0 +1,4 @@
+report,metric,period,value,definition,action,state
+R1,revenue,2026-Q2,12.4%,v1,A1,issued
+R2,members,2026-Q2,8.1%,v1,A2,complete
+R3,comparable-sales,2026-Q3,4.3%,v2,A3,review

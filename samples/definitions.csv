@@ -1,0 +1,4 @@
+metric,version,formula,from,owner
+revenue,v1,settled-sales,2026-01-01,finance
+members,v1,deduplicated-active,2026-01-01,crm
+comparable-sales,v2,same-store-net,2026-07-01,analytics
