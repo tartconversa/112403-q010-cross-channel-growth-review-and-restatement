@@ -1,0 +1,29 @@
+{
+  "report": "R1",
+  "metric": "revenue",
+  "period": "2026-Q2",
+  "compare_period": "2025-Q2",
+  "published_on": "2026-07-15",
+  "definition": "v1",
+  "caliber": "settled-sales",
+  "headline": "12.4%",
+  "headline_numeric": 12.4,
+  "unit": "YoY %",
+  "scope_entities": ["S0", "S1", "TM", "JD", "DY"],
+  "bridge_published": {
+    "base_total": 1000,
+    "current_total": 1124,
+    "delta": 124,
+    "components": [
+      {"code": "comparable", "label": "可比业务变化", "amount": -66},
+      {"code": "portfolio_new", "label": "组合变化·新品/套装", "amount": 141},
+      {"code": "portfolio_discontinued", "label": "组合变化·退市品类", "amount": -93},
+      {"code": "scope_new", "label": "经营范围扩大（DY 新平台）", "amount": 142}
+    ]
+  },
+  "conclusion": "Q2 总收入同比 +12.4%，管理层拟据此追加 Q3 市场与备货预算。",
+  "owner": "周正（财务）",
+  "action": "A1",
+  "applied_corrections": [],
+  "fingerprint": "r1-2026q2-v1-original"
+}

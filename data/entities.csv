@@ -1,0 +1,8 @@
+id,name,kind,group,platform,note
+S1,华东一号店,store,east,,2019 年开业的核心可比门店
+S0,华西旧址店,store,west,,2026-06-30 租约到期闭店
+S2,华西新中心店,store,west,,2026-07-01 开业；后核实为 S0 搬迁续体
+TM,天猫旗舰店,platform,online,tmall,线上主力平台
+JD,京东自营,platform,online,jd,2026-Q3 数据文件曾迟到
+DY,抖音直播间,platform,online,douyin,2026-04 新上线平台
+XHS,小红书商城,platform,online,xiaohongshu,2026-08 新上线；Q3 文件仅到 8 月（部分期间）

@@ -1,0 +1,19 @@
+{
+  "report": "R4",
+  "metric": "category-growth",
+  "period": "2026-Q3",
+  "compare_period": "2025-Q3",
+  "published_on": "2026-10-15",
+  "definition": "v1",
+  "classification_version": "2",
+  "category": "skincare",
+  "headline": "14.8%",
+  "headline_numeric": 14.8,
+  "unit": "YoY %",
+  "category_published": {"base_amount": 485, "current_amount": 557},
+  "conclusion": "按 v2 分类护肤品类同比 +14.8%，品类升级结论拟用于下月陈列与备货倾斜。",
+  "owner": "钱芳（商品负责人）",
+  "action": "A4",
+  "applied_corrections": [],
+  "fingerprint": "r4-2026q3-skincare-class-v2"
+}

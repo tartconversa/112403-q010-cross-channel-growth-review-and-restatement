@@ -1,0 +1,2 @@
+fact_id,team,metric,period,entity,sku,value,basis,submitted_on,received_on,batch,note
+F-CONF-DY,online,revenue,2026-08,DY,P2,39,settled-sales,2026-10-06,2026-10-06,online-dy-flash,直播闪购净额/总额口径争议

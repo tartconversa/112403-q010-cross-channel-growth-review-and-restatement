@@ -1,0 +1,16 @@
+entity,kind,group,state,from,to,version
+S1,store,east,comparable,2024-01-01,,1
+S0,store,west,comparable,2024-01-01,2026-06-30,1
+S0,store,west,closed,2026-07-01,,1
+S2,store,west,new,2026-07-01,,1
+TM,platform,online,comparable,2024-01-01,,1
+JD,platform,online,comparable,2024-01-01,,1
+DY,platform,online,new,2026-04-01,,1
+XHS,platform,online,new,2026-08-01,,1
+P1,sku,makeup,active,2025-01-01,2026-07-31,1
+P1,sku,skincare,reclassified,2026-08-01,,2
+P1,sku,sets,corrected-bundle,2025-07-01,,3
+P2,sku,skincare,active,2025-01-01,,1
+P3,sku,devices,active,2025-01-01,,1
+P4,sku,makeup,discontinued,2025-01-01,2026-03-31,1
+P5,sku,sets,new-line,2026-04-01,,1

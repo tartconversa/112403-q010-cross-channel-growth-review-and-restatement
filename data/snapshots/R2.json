@@ -1,0 +1,19 @@
+{
+  "report": "R2",
+  "metric": "members",
+  "period": "2026-Q2",
+  "compare_period": "2025-Q2",
+  "published_on": "2026-07-16",
+  "definition": "v1",
+  "link_version": "L1",
+  "headline": "8.1%",
+  "headline_numeric": 8.1,
+  "unit": "YoY %",
+  "dedup_published": {"base_persons": 37, "current_persons": 40,
+                      "active_aliases_base": 38, "active_aliases_current": 41},
+  "conclusion": "L1 口径活跃会员 37→40（+8.1%），会员增长结论用于下月投放人群包预算。",
+  "owner": "李娟（CRM）",
+  "action": "A2",
+  "applied_corrections": [],
+  "fingerprint": "r2-2026q2-l1-original"
+}

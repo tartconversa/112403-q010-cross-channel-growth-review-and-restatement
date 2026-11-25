@@ -1,0 +1,272 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全域经营指标治理仪表盘</title><style>
+:root{
+  color-scheme: light;
+  --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e;
+  --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --pos:#2a78d6; --neg:#e34948; --total:#52514e;
+  --good:#0a7d0a; --warn:#9a6b00; --serious:#b5481f; --critical:#b3261e;
+  --good-bg:#e8f5e8; --warn-bg:#fdf3d8; --critical-bg:#fbe6e4; --cond-bg:#e8f1fc;
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface:#1a1a19; --page:#0d0d0d; --ink:#f0efec; --ink2:#c3c2b7;
+  --muted:#898781; --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.12);
+  --pos:#3987e5; --neg:#e66767; --total:#c3c2b7;
+  --good:#34b334; --warn:#e0a92e; --serious:#ec835a; --critical:#e66767;
+  --good-bg:#143014; --warn-bg:#33280a; --critical-bg:#3a1715; --cond-bg:#12263f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+ font:14px/1.6 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+ border-bottom:1px solid var(--grid);padding-bottom:16px;margin-bottom:22px;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 4px} h2{font-size:17px;margin:34px 0 12px}
+h3{font-size:15px;margin:18px 0 8px}
+.sub{color:var(--ink2);font-size:13px}
+nav.toc{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pos);text-decoration:none;border:1px solid var(--border);
+ padding:3px 10px;border-radius:999px;background:var(--surface)}
+nav.toc a:hover{border-color:var(--pos)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.tile .k{color:var(--ink2);font-size:12.5px}.tile .v{font-size:26px;font-weight:650;margin-top:2px;
+ font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+ padding:18px 20px;margin:14px 0}
+.pub{border-left:4px solid var(--axis)}
+.pub.reopen{border-left-color:var(--critical)}
+.pub.stable{border-left-color:var(--good)}
+.pub.watch{border-left-color:var(--warn)}
+.row-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.title{font-weight:650;font-size:15.5px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+ padding:3px 10px;border-radius:999px;white-space:nowrap}
+.badge.blocked,.badge.reopen{color:var(--critical);background:var(--critical-bg)}
+.badge.conditional,.badge.watch{color:var(--warn);background:var(--warn-bg)}
+.badge.ready,.badge.stable{color:var(--good);background:var(--good-bg)}
+.concl{margin:8px 0;color:var(--ink)}
+.orig{color:var(--ink2);font-size:13px}
+.why{margin:8px 0;padding-left:0;list-style:none}
+.why li{padding:3px 0 3px 20px;position:relative}
+.why li:before{content:"·";position:absolute;left:8px;color:var(--muted);font-weight:700}
+.advice{border-radius:8px;padding:10px 14px;margin-top:10px;font-size:13.5px}
+.advice.ready{background:var(--good-bg)} .advice.conditional{background:var(--cond-bg)}
+.advice.blocked{background:var(--critical-bg)}
+.advice .use{margin:6px 0 0}.tag{display:inline-block;font-size:11.5px;border-radius:5px;
+ padding:1px 7px;margin-right:6px;font-weight:600}
+.tag.yes{background:var(--good-bg);color:var(--good)} .tag.no{background:var(--critical-bg);color:var(--critical)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:10px 0}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
+th{color:var(--ink2);font-weight:600;font-size:12.5px;background:transparent}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+.pill{font-size:11.5px;padding:1px 8px;border-radius:999px;border:1px solid var(--border);color:var(--ink2)}
+/* diverging bar bridge */
+.bars{margin:14px 0 6px}
+.brow{display:grid;grid-template-columns:minmax(190px,280px) 1fr 96px;gap:12px;align-items:center;
+ padding:5px 0}
+.blabel{font-size:12.8px;color:var(--ink2)}
+.track{position:relative;height:18px}
+.track:before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--axis)}
+.bar{position:absolute;top:2px;height:14px;border-radius:3px;min-width:2px;cursor:default}
+.bar.pos{left:50%;background:var(--pos)}
+.bar.neg{right:50%;background:var(--neg)}
+.bval{text-align:right;font-size:12.8px;font-variant-numeric:tabular-nums;font-weight:600}
+.delta-pos{color:var(--pos)} .delta-neg{color:var(--neg)}
+.note{font-size:12.5px;color:var(--ink2);margin:6px 0}
+.gapbox{border:1px dashed var(--serious);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:13px}
+.foot{margin-top:40px;color:var(--muted);font-size:12px;border-top:1px solid var(--grid);padding-top:14px}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:8px;
+ padding:5px 12px;font-size:12.5px;cursor:pointer}
+.btn:hover{border-color:var(--pos)}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);
+ font-size:12px;padding:6px 9px;border-radius:6px;max-width:320px;display:none;z-index:9;
+ box-shadow:0 4px 16px rgba(0,0,0,.25)}
+@media (max-width:720px){.brow{grid-template-columns:130px 1fr 74px}.wrap{padding:18px 12px 60px}}
+</style></head>
+<body><div class="wrap">
+<header class="top"><div><h1>全域经营指标治理仪表盘</h1>
+<div class="sub">合成数据 · 仅使用 Python 标准库 · 数字单位以指标登记为准（示例为万元 / 人 / %）</div>
+</div><button class="btn" onclick="toggleTheme()">🌓 切换明暗</button></header>
+
+    <nav class="toc"><a href="#publications">发布结论</a><a href="#bridges">同比桥接</a><a href="#members">会员</a><a href="#category">品类</a><a href="#pending">待处理</a><a href="metrics/revenue.html">revenue 档案</a><a href="metrics/members.html">members 档案</a><a href="metrics/comparable-sales.html">comparable-sales 档案</a><a href="metrics/category-growth.html">category-growth 档案</a></nav>
+    <div class="cards"><div class="tile"><div class="k">导入事实行</div><div class="v">216</div></div><div class="tile"><div class="k">发布结论</div><div class="v">4</div></div><div class="tile"><div class="k">应重开</div><div class="v">3</div></div><div class="tile"><div class="k">待处理事项</div><div class="v">6</div></div><div class="tile"><div class="k">追溯修正</div><div class="v">3</div></div></div>
+    
+    <h2 id="publications">一、已发布结论 · 重开判定 · 下月资源决策可用性</h2>
+    
+        <section class="card pub stable" id="R1">
+          <div class="row-head">
+            <div class="title">R1 · revenue · 2026-Q2</div>
+            <span class="badge stable">🟢 无需重开</span>
+          </div>
+          <p class="concl">Q2 总收入同比 +12.4%，管理层拟据此追加 Q3 市场与备货预算</p>
+          <p class="orig">发布值 <b>12.4%</b>
+             （定义 v1，2026-07-15，责任人 周正（财务））
+             ｜当前口径重算：<b class="delta-pos">12.4%</b>
+             ｜差异 +0.0pp</p>
+          <ul class="why"><li>未发现越过重要性阈值的追溯影响。</li></ul>
+          <div class="advice conditional">
+            <span class="badge conditional">⚠️ 总体增长由范围扩张/商品组合驱动，可比业务仍在下滑：总量结论可用，结构性分配不能看汇总同比</span>
+            <div class="use"><span class="tag yes">可用于</span><ul><li>总盘现金流与库存计划</li><li>对已验证有效的新品/套装做小规模追加实验</li></ul>
+                 <span class="tag no">不可用于</span><ul><li>按汇总同比给可比门店/传统品类追加预算</li><li>据此认定多数渠道负责人经营改善</li></ul></div>
+          </div>
+          <p class="note">关联行动：<span class="pill">A1 · issued</span></p>
+        </section>
+        <section class="card pub reopen" id="R2">
+          <div class="row-head">
+            <div class="title">R2 · members · 2026-Q2</div>
+            <span class="badge reopen">🔴 应重开</span>
+          </div>
+          <p class="concl">L1 口径活跃会员 37→40（+8.1%），会员增长结论用于下月投放人群包预算</p>
+          <p class="orig">发布值 <b>8.1%</b>
+             （定义 v1，2026-07-16，责任人 李娟（CRM））
+             ｜当前口径重算：<b class="delta-neg">2.6%</b>
+             ｜差异 -5.5pp</p>
+          <ul class="why"><li>追溯修正 C-MEM-1（member_identity）：L2 身份图谱修复一处错误合并（两人并一人）与两处漏合并（同一人多账号未并），需重算 Q2 去重会员</li><li>会员去重版本由 L1 追溯修订为 L2：去重人数 38→39（本期）</li></ul>
+          <div class="advice blocked">
+            <span class="badge blocked">⛔ R2 应重开：原结论暂停用于下月资源决策</span>
+            <div class="use"><span class="tag yes">可用于</span><ul><li>仅可作为已发布历史版本留存</li></ul>
+                 <span class="tag no">不可用于</span><ul><li>预算追加/收缩</li><li>渠道与门店资源分配</li><li>品类备货与投放</li><li>团队绩效兑现</li></ul></div>
+          </div>
+          <p class="note">关联行动：<span class="pill">A2 · complete · 完成于 2026-07-28（记录保留）</span></p>
+        </section>
+        <section class="card pub reopen" id="R3">
+          <div class="row-head">
+            <div class="title">R3 · comparable-sales · 2026-Q3</div>
+            <span class="badge reopen">🔴 应重开</span>
+          </div>
+          <p class="concl">快报口径可比销售 +4.3%，判断同店经营回暖；京东数据未到，结论先进入复核</p>
+          <p class="orig">发布值 <b>4.3%</b>
+             （定义 v2，2026-10-12，责任人 陈澈（经营分析））
+             ｜当前口径重算：<b class="delta-neg">-4.3%</b>
+             ｜差异 -8.6pp</p>
+          <ul class="why"><li>追溯修正 C-STORE-1（store_status）：S2 不是纯新增门店，而是 S0 搬迁续体；Q3 可比口径应配对 S0 基期与 S2 本期</li><li>可比范围新增匹配主体：JD, S0→S2（迟到数据或谱系修正）</li><li>当前仍存在覆盖缺口：XHS(partial)</li></ul>
+          <div class="advice blocked">
+            <span class="badge blocked">⛔ R3 应重开：原结论暂停用于下月资源决策</span>
+            <div class="use"><span class="tag yes">可用于</span><ul><li>仅可作为已发布历史版本留存</li></ul>
+                 <span class="tag no">不可用于</span><ul><li>预算追加/收缩</li><li>渠道与门店资源分配</li><li>品类备货与投放</li><li>团队绩效兑现</li></ul></div>
+          </div>
+          <p class="note">关联行动：<span class="pill">A3 · review</span></p>
+        </section>
+        <section class="card pub reopen" id="R4">
+          <div class="row-head">
+            <div class="title">R4 · category-growth · 2026-Q3</div>
+            <span class="badge reopen">🔴 应重开</span>
+          </div>
+          <p class="concl">按 v2 分类护肤品类同比 +14.8%，品类升级结论拟用于下月陈列与备货倾斜</p>
+          <p class="orig">发布值 <b>14.8%</b>
+             （定义 v1，2026-10-15，责任人 钱芳（商品负责人））
+             ｜当前口径重算：<b class="delta-neg">-4.1%</b>
+             ｜差异 -18.9pp</p>
+          <ul class="why"><li>追溯修正 C-PROD-1（product_classification）：P1 在 v2 被误归 skincare；v3 追溯重分类为 sets（组合装），2025-Q3 比较期同步重述</li><li>品类分类追溯修订：skincare 同比由 14.8% 变为 -4.1%（2→最新分类）</li></ul>
+          <div class="advice blocked">
+            <span class="badge blocked">⛔ R4 应重开：原结论暂停用于下月资源决策</span>
+            <div class="use"><span class="tag yes">可用于</span><ul><li>仅可作为已发布历史版本留存</li></ul>
+                 <span class="tag no">不可用于</span><ul><li>预算追加/收缩</li><li>渠道与门店资源分配</li><li>品类备货与投放</li><li>团队绩效兑现</li></ul></div>
+          </div>
+          <p class="note">关联行动：<span class="pill">A4 · issued</span></p>
+        </section>
+    <h2 id="bridges">二、总体同比 = 可比业务 + 范围/组合变化</h2>
+    <div class="card"><h3>2026-Q2 vs 2025-Q2 · R1 发布期（覆盖完整、冲突已裁决）</h3>
+    <div class="cards">
+      <div class="tile"><div class="k">基期 2025-Q2</div>
+        <div class="v">1,000</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">总变动</div>
+        <div class="v delta-pos">+12.4%</div>
+        <div class="s">Δ 124</div></div>
+      <div class="tile"><div class="k">本期 2026-Q2</div>
+        <div class="v">1,124</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">可比实体同比</div>
+        <div class="v delta-neg">-1.8%</div>
+        <div class="s">JD、S0、S1、TM</div></div>
+    </div><div class="bars" role="img" aria-label="同比变动发散条形图"><div class="brow"><div class="blabel">可比业务变化（同范围门店/平台与续接商品）</div><div class="track"><div class="bar neg" style="width:23.24%" data-tip="可比业务变化（同范围门店/平台与续接商品）：-66.0（基 907.0 / 本 841.0），明细 12 行"></div></div><div class="bval delta-neg">-66.0</div></div><div class="brow"><div class="blabel">组合变化·新品/新规格贡献</div><div class="track"><div class="bar pos" style="width:49.65%" data-tip="组合变化·新品/新规格贡献：+141.0（基 0.0 / 本 141.0），明细 3 行"></div></div><div class="bval delta-pos">+141.0</div></div><div class="brow"><div class="blabel">组合变化·退市/收缩商品</div><div class="track"><div class="bar neg" style="width:32.75%" data-tip="组合变化·退市/收缩商品：-93.0（基 93.0 / 本 0.0），明细 4 行"></div></div><div class="bval delta-neg">-93.0</div></div><div class="brow"><div class="blabel">经营范围扩大（新门店/新平台）</div><div class="track"><div class="bar pos" style="width:50.00%" data-tip="经营范围扩大（新门店/新平台）：+142.0（基 0.0 / 本 142.0），明细 1 行"></div></div><div class="bval delta-pos">+142.0</div></div></div>
+    <details><summary class="note" style="cursor:pointer">查看桥接数据表（精确可加）</summary>
+    <table><thead><tr><th>变动来源</th><th class="num">基期</th>
+    <th class="num">本期</th><th class="num">对 Δ 贡献</th></tr></thead>
+    <tbody><tr><td>可比业务变化（同范围门店/平台与续接商品）</td><td class="num">907</td><td class="num">841</td><td class="num delta-neg">-66.0</td></tr><tr><td>组合变化·新品/新规格贡献</td><td class="num">0</td><td class="num">141</td><td class="num delta-pos">+141.0</td></tr><tr><td>组合变化·退市/收缩商品</td><td class="num">93</td><td class="num">0</td><td class="num delta-neg">-93.0</td></tr><tr><td>经营范围扩大（新门店/新平台）</td><td class="num">0</td><td class="num">142</td><td class="num delta-pos">+142.0</td></tr>
+    <tr><td><b>合计 Δ</b></td><td class="num">1,000</td>
+    <td class="num">1,124</td>
+    <td class="num"><b>+124.0</b></td></tr></tbody></table></details></div><div class="card"><h3>2026-Q3 vs 2025-Q3 · 当前全部数据（含迟到 JD 与搬迁确认）</h3>
+    <div class="cards">
+      <div class="tile"><div class="k">基期 2025-Q3</div>
+        <div class="v">1,010</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">总变动</div>
+        <div class="v delta-pos">+9.0%</div>
+        <div class="s">Δ 91</div></div>
+      <div class="tile"><div class="k">本期 2026-Q3</div>
+        <div class="v">1,101</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">可比实体同比</div>
+        <div class="v delta-neg">-4.3%</div>
+        <div class="s">JD、S0→S2、S1、TM</div></div>
+    </div><div class="bars" role="img" aria-label="同比变动发散条形图"><div class="brow"><div class="blabel">可比业务变化（同范围门店/平台与续接商品）</div><div class="track"><div class="bar neg" style="width:33.75%" data-tip="可比业务变化（同范围门店/平台与续接商品）：-108.0（基 915.0 / 本 807.0），明细 12 行"></div></div><div class="bval delta-neg">-108.0</div></div><div class="brow"><div class="blabel">组合变化·新品/新规格贡献</div><div class="track"><div class="bar pos" style="width:50.00%" data-tip="组合变化·新品/新规格贡献：+160.0（基 0.0 / 本 160.0），明细 4 行"></div></div><div class="bval delta-pos">+160.0</div></div><div class="brow"><div class="blabel">组合变化·退市/收缩商品</div><div class="track"><div class="bar neg" style="width:29.69%" data-tip="组合变化·退市/收缩商品：-95.0（基 95.0 / 本 0.0），明细 4 行"></div></div><div class="bval delta-neg">-95.0</div></div><div class="brow"><div class="blabel">经营范围扩大（新门店/新平台）</div><div class="track"><div class="bar pos" style="width:41.88%" data-tip="经营范围扩大（新门店/新平台）：+134.0（基 0.0 / 本 134.0），明细 1 行"></div></div><div class="bval delta-pos">+134.0</div></div></div>
+    <details><summary class="note" style="cursor:pointer">查看桥接数据表（精确可加）</summary>
+    <table><thead><tr><th>变动来源</th><th class="num">基期</th>
+    <th class="num">本期</th><th class="num">对 Δ 贡献</th></tr></thead>
+    <tbody><tr><td>可比业务变化（同范围门店/平台与续接商品）</td><td class="num">915</td><td class="num">807</td><td class="num delta-neg">-108.0</td></tr><tr><td>组合变化·新品/新规格贡献</td><td class="num">0</td><td class="num">160</td><td class="num delta-pos">+160.0</td></tr><tr><td>组合变化·退市/收缩商品</td><td class="num">95</td><td class="num">0</td><td class="num delta-neg">-95.0</td></tr><tr><td>经营范围扩大（新门店/新平台）</td><td class="num">0</td><td class="num">134</td><td class="num delta-pos">+134.0</td></tr>
+    <tr><td><b>合计 Δ</b></td><td class="num">1,010</td>
+    <td class="num">1,101</td>
+    <td class="num"><b>+91.0</b></td></tr></tbody></table></details><p class="note">调节备忘：缺口/部分覆盖主体基期可见金额 0、本期可见金额 18 已移出桥接；它们是真实存在但不完整的报送，不是零。</p><div class="gapbox">🧩 <b>覆盖部分期间：XHS</b> — 应报 2 个月 [&#x27;2026-08&#x27;, &#x27;2026-09&#x27;]，实有 [&#x27;2026-08&#x27;]。仅覆盖 1/2 个应报月份。该主体两侧均移出桥接，<b>绝不按 0 处理</b>。</div><div class="gapbox">⚡ 未裁决冲突：<code>revenue|2026-08|DY|P2</code>，冲突单元格未计入。</div></div><div class="card"><h3>2026-Q3 · 发布时点视图（as-of 2026-10-12，JD 未到）</h3>
+    <div class="cards">
+      <div class="tile"><div class="k">基期 2025-Q3</div>
+        <div class="v">810</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">总变动</div>
+        <div class="v delta-pos">+13.0%</div>
+        <div class="s">Δ 105</div></div>
+      <div class="tile"><div class="k">本期 2026-Q3</div>
+        <div class="v">915</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">可比实体同比</div>
+        <div class="v delta-pos">4.3%</div>
+        <div class="s">S1、TM</div></div>
+    </div><div class="bars" role="img" aria-label="同比变动发散条形图"><div class="brow"><div class="blabel">可比业务变化（同范围门店/平台与续接商品）</div><div class="track"><div class="bar neg" style="width:3.29%" data-tip="可比业务变化（同范围门店/平台与续接商品）：-19.0（基 535.0 / 本 516.0），明细 6 行"></div></div><div class="bval delta-neg">-19.0</div></div><div class="brow"><div class="blabel">组合变化·新品/新规格贡献</div><div class="track"><div class="bar pos" style="width:19.03%" data-tip="组合变化·新品/新规格贡献：+110.0（基 0.0 / 本 110.0），明细 2 行"></div></div><div class="bval delta-pos">+110.0</div></div><div class="brow"><div class="blabel">组合变化·退市/收缩商品</div><div class="track"><div class="bar neg" style="width:11.25%" data-tip="组合变化·退市/收缩商品：-65.0（基 65.0 / 本 0.0），明细 2 行"></div></div><div class="bval delta-neg">-65.0</div></div><div class="brow"><div class="blabel">经营范围扩大（新门店/新平台）</div><div class="track"><div class="bar pos" style="width:50.00%" data-tip="经营范围扩大（新门店/新平台）：+289.0（基 0.0 / 本 289.0），明细 2 行"></div></div><div class="bval delta-pos">+289.0</div></div><div class="brow"><div class="blabel">经营范围收缩（关闭/迁出主体）</div><div class="track"><div class="bar neg" style="width:36.33%" data-tip="经营范围收缩（关闭/迁出主体）：-210.0（基 210.0 / 本 0.0），明细 1 行"></div></div><div class="bval delta-neg">-210.0</div></div></div>
+    <details><summary class="note" style="cursor:pointer">查看桥接数据表（精确可加）</summary>
+    <table><thead><tr><th>变动来源</th><th class="num">基期</th>
+    <th class="num">本期</th><th class="num">对 Δ 贡献</th></tr></thead>
+    <tbody><tr><td>可比业务变化（同范围门店/平台与续接商品）</td><td class="num">535</td><td class="num">516</td><td class="num delta-neg">-19.0</td></tr><tr><td>组合变化·新品/新规格贡献</td><td class="num">0</td><td class="num">110</td><td class="num delta-pos">+110.0</td></tr><tr><td>组合变化·退市/收缩商品</td><td class="num">65</td><td class="num">0</td><td class="num delta-neg">-65.0</td></tr><tr><td>经营范围扩大（新门店/新平台）</td><td class="num">0</td><td class="num">289</td><td class="num delta-pos">+289.0</td></tr><tr><td>经营范围收缩（关闭/迁出主体）</td><td class="num">210</td><td class="num">0</td><td class="num delta-neg">-210.0</td></tr>
+    <tr><td><b>合计 Δ</b></td><td class="num">810</td>
+    <td class="num">915</td>
+    <td class="num"><b>+105.0</b></td></tr></tbody></table></details><p class="note">调节备忘：缺口/部分覆盖主体基期可见金额 200、本期可见金额 18 已移出桥接；它们是真实存在但不完整的报送，不是零。</p><div class="gapbox">🧩 <b>覆盖缺失：JD</b> — 应报 3 个月 [&#x27;2026-07&#x27;, &#x27;2026-08&#x27;, &#x27;2026-09&#x27;]，实有 []。范围内但没有任何已生效事实；不得按 0 处理。该主体两侧均移出桥接，<b>绝不按 0 处理</b>。</div><div class="gapbox">🧩 <b>覆盖部分期间：XHS</b> — 应报 2 个月 [&#x27;2026-08&#x27;, &#x27;2026-09&#x27;]，实有 [&#x27;2026-08&#x27;]。仅覆盖 1/2 个应报月份。该主体两侧均移出桥接，<b>绝不按 0 处理</b>。</div><div class="gapbox">⚡ 未裁决冲突：<code>revenue|2026-08|DY|P2</code>，冲突单元格未计入。</div></div>
+    
+    <div class="card"><h3>月度收入与覆盖标记</h3>
+    <table><thead><tr><th>月份</th><th>去年同月</th><th class="num">基期</th>
+    <th class="num">本期</th><th class="num">同比</th><th>覆盖/冲突</th></tr></thead>
+    <tbody><tr><td>2026-04</td><td>2025-04</td><td class='num'>241</td><td class='num'>250</td><td class='num delta-pos'>+3.7%</td><td class='sub'></td></tr><tr><td>2026-05</td><td>2025-05</td><td class='num'>289</td><td class='num'>313</td><td class='num delta-pos'>+8.3%</td><td class='sub'></td></tr><tr><td>2026-06</td><td>2025-06</td><td class='num'>470</td><td class='num'>561</td><td class='num delta-pos'>+19.4%</td><td class='sub'></td></tr><tr><td>2026-07</td><td>2025-07</td><td class='num'>323</td><td class='num'>361</td><td class='num delta-pos'>+11.8%</td><td class='sub'></td></tr><tr><td>2026-08</td><td>2025-08</td><td class='num'>334</td><td class='num'>364</td><td class='num delta-pos'>+9.0%</td><td class='sub'>revenue|2026-08|DY|P2</td></tr><tr><td>2026-09</td><td>2025-09</td><td class='num'>353</td><td class='num'>394</td><td class='num delta-pos'>+11.6%</td><td class='sub'>XHS:missing</td></tr></tbody></table>
+    <p class="note">月度金额只合计实际收到且冲突已生效的单元格；带 partial/missing
+    标记的月份不能直接用于月度排名，缺口从未按零补齐。</p></div>
+    <h2 id="members">三、会员身份追溯修正（R2）</h2>
+    <div class="card"><table><thead><tr><th>关联版本</th>
+      <th class="num">2025-Q2 去重人数</th><th class="num">2026-Q2 去重人数</th>
+      <th class="num">同比</th></tr></thead><tbody><tr><td>L1</td><td class='num'>37</td><td class='num'>40</td><td class='num delta-pos'>+8.1%</td></tr><tr><td>L2</td><td class='num'>38</td><td class='num'>39</td><td class='num delta-pos'>+2.6%</td></tr></tbody></table>
+      <p class="note">L1 为 R2 原发布口径；L2 为追溯修正后的身份图谱。旧版本仍可随时复算。</p></div>
+    <h2 id="category">四、商品分类追溯修正（R4 · skincare）</h2>
+    <div class="card"><p class="orig">发布 v2：485 →
+      557（14.8%）；
+      当前 v3：485 → 465
+      （-4.1%）。</p>
+      <table><thead><tr><th>品类(v3)</th><th class="num">基期</th>
+      <th class="num">本期</th><th class="num">同比</th></tr></thead>
+      <tbody><tr><td>devices</td><td class='num'>309</td><td class='num'>328</td><td class='num delta-pos'>6.1%</td></tr><tr><td>makeup</td><td class='num'>95</td><td class='num'>0</td><td class='num delta-neg'>-100.0%</td></tr><tr><td>sets</td><td class='num'>121</td><td class='num'>308</td><td class='num delta-pos'>154.5%</td></tr><tr><td>skincare</td><td class='num'>485</td><td class='num'>465</td><td class='num delta-neg'>-4.1%</td></tr></tbody></table></div>
+    <h2 id="pending">五、当前待处理动作（6）</h2>
+    <div class="card"><table><thead><tr><th>类型</th><th>对象</th><th>事项</th>
+      <th>责任人</th><th>状态</th><th>说明</th></tr></thead>
+      <tbody><tr><td>action</td><td><code>A1</code></td><td>提出 Q3 追加市场预算方案并报管理层</td><td>周正（财务）</td><td><span class='pill'>issued</span></td><td class='sub'>关联发布 R1，到期 2026-11-28</td></tr><tr><td>action</td><td><code>A3</code></td><td>催交京东 Q3 结算文件并复核可比门店范围</td><td>陈澈（经营分析）</td><td><span class='pill'>review</span></td><td class='sub'>关联发布 R3，到期 2026-11-25</td></tr><tr><td>action</td><td><code>A4</code></td><td>核实 P1 品类归属并按确认结果调整 Q4 备货</td><td>钱芳（商品负责人）</td><td><span class='pill'>issued</span></td><td class='sub'>关联发布 R4，到期 2026-11-30</td></tr><tr><td>conflict</td><td><code>revenue|2026-08|DY|P2</code></td><td>指标事实冲突：revenue 2026-08 DY P2</td><td>metric-governance</td><td><span class='pill'>open</span></td><td class='sub'>候选值 26.0 / 39.0</td></tr><tr><td>coverage</td><td><code>revenue:2026-Q3:XHS:partial</code></td><td>2026-Q3 XHS 覆盖部分</td><td>channel-owner</td><td><span class='pill'>partial</span></td><td class='sub'>仅覆盖 1/2 个应报月份</td></tr><tr><td>confirmation</td><td><code>P5:new-line:</code></td><td>待确认product谱系：P5 new-line </td><td>product-owner</td><td><span class='pill'>pending</span></td><td class='sub'>大促组合装是否算全新产品线尚待商品负责人确认</td></tr></tbody></table></div>
+    
+<div class="foot">治理原则：可比部分与范围/组合变化分开呈现；缺失渠道不默认为零；
+原始发布快照与行动完成记录只读保留；追溯修正通过新版本叠加并触发重开判定。</div>
+</div><div id="tip"></div><script>
+const tip=document.getElementById('tip');
+document.addEventListener('mousemove',e=>{
+  const t=e.target.closest('[data-tip]');
+  if(t){tip.style.display='block';tip.textContent=t.getAttribute('data-tip');
+    tip.style.left=Math.min(e.clientX+14,innerWidth-340)+'px';
+    tip.style.top=(e.clientY+14)+'px';}
+  else tip.style.display='none';
+});
+function toggleTheme(){
+  const r=document.documentElement;
+  r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+</script></body></html>

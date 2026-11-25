@@ -1,0 +1,144 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>指标档案 · comparable-sales</title><style>
+:root{
+  color-scheme: light;
+  --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e;
+  --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --pos:#2a78d6; --neg:#e34948; --total:#52514e;
+  --good:#0a7d0a; --warn:#9a6b00; --serious:#b5481f; --critical:#b3261e;
+  --good-bg:#e8f5e8; --warn-bg:#fdf3d8; --critical-bg:#fbe6e4; --cond-bg:#e8f1fc;
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface:#1a1a19; --page:#0d0d0d; --ink:#f0efec; --ink2:#c3c2b7;
+  --muted:#898781; --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.12);
+  --pos:#3987e5; --neg:#e66767; --total:#c3c2b7;
+  --good:#34b334; --warn:#e0a92e; --serious:#ec835a; --critical:#e66767;
+  --good-bg:#143014; --warn-bg:#33280a; --critical-bg:#3a1715; --cond-bg:#12263f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+ font:14px/1.6 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+ border-bottom:1px solid var(--grid);padding-bottom:16px;margin-bottom:22px;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 4px} h2{font-size:17px;margin:34px 0 12px}
+h3{font-size:15px;margin:18px 0 8px}
+.sub{color:var(--ink2);font-size:13px}
+nav.toc{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pos);text-decoration:none;border:1px solid var(--border);
+ padding:3px 10px;border-radius:999px;background:var(--surface)}
+nav.toc a:hover{border-color:var(--pos)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.tile .k{color:var(--ink2);font-size:12.5px}.tile .v{font-size:26px;font-weight:650;margin-top:2px;
+ font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+ padding:18px 20px;margin:14px 0}
+.pub{border-left:4px solid var(--axis)}
+.pub.reopen{border-left-color:var(--critical)}
+.pub.stable{border-left-color:var(--good)}
+.pub.watch{border-left-color:var(--warn)}
+.row-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.title{font-weight:650;font-size:15.5px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+ padding:3px 10px;border-radius:999px;white-space:nowrap}
+.badge.blocked,.badge.reopen{color:var(--critical);background:var(--critical-bg)}
+.badge.conditional,.badge.watch{color:var(--warn);background:var(--warn-bg)}
+.badge.ready,.badge.stable{color:var(--good);background:var(--good-bg)}
+.concl{margin:8px 0;color:var(--ink)}
+.orig{color:var(--ink2);font-size:13px}
+.why{margin:8px 0;padding-left:0;list-style:none}
+.why li{padding:3px 0 3px 20px;position:relative}
+.why li:before{content:"·";position:absolute;left:8px;color:var(--muted);font-weight:700}
+.advice{border-radius:8px;padding:10px 14px;margin-top:10px;font-size:13.5px}
+.advice.ready{background:var(--good-bg)} .advice.conditional{background:var(--cond-bg)}
+.advice.blocked{background:var(--critical-bg)}
+.advice .use{margin:6px 0 0}.tag{display:inline-block;font-size:11.5px;border-radius:5px;
+ padding:1px 7px;margin-right:6px;font-weight:600}
+.tag.yes{background:var(--good-bg);color:var(--good)} .tag.no{background:var(--critical-bg);color:var(--critical)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:10px 0}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
+th{color:var(--ink2);font-weight:600;font-size:12.5px;background:transparent}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+.pill{font-size:11.5px;padding:1px 8px;border-radius:999px;border:1px solid var(--border);color:var(--ink2)}
+/* diverging bar bridge */
+.bars{margin:14px 0 6px}
+.brow{display:grid;grid-template-columns:minmax(190px,280px) 1fr 96px;gap:12px;align-items:center;
+ padding:5px 0}
+.blabel{font-size:12.8px;color:var(--ink2)}
+.track{position:relative;height:18px}
+.track:before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--axis)}
+.bar{position:absolute;top:2px;height:14px;border-radius:3px;min-width:2px;cursor:default}
+.bar.pos{left:50%;background:var(--pos)}
+.bar.neg{right:50%;background:var(--neg)}
+.bval{text-align:right;font-size:12.8px;font-variant-numeric:tabular-nums;font-weight:600}
+.delta-pos{color:var(--pos)} .delta-neg{color:var(--neg)}
+.note{font-size:12.5px;color:var(--ink2);margin:6px 0}
+.gapbox{border:1px dashed var(--serious);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:13px}
+.foot{margin-top:40px;color:var(--muted);font-size:12px;border-top:1px solid var(--grid);padding-top:14px}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:8px;
+ padding:5px 12px;font-size:12.5px;cursor:pointer}
+.btn:hover{border-color:var(--pos)}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);
+ font-size:12px;padding:6px 9px;border-radius:6px;max-width:320px;display:none;z-index:9;
+ box-shadow:0 4px 16px rgba(0,0,0,.25)}
+@media (max-width:720px){.brow{grid-template-columns:130px 1fr 74px}.wrap{padding:18px 12px 60px}}
+</style></head>
+<body><div class="wrap">
+<header class="top"><div><h1>指标档案 · comparable-sales</h1>
+<div class="sub">合成数据 · 仅使用 Python 标准库 · 数字单位以指标登记为准（示例为万元 / 人 / %）</div>
+</div><button class="btn" onclick="toggleTheme()">🌓 切换明暗</button></header>
+
+    <nav class="toc"><a href="../dashboard.html">← 返回总览</a></nav>
+    <h2>口径定义</h2>
+    <div class="card"><table><thead><tr><th>版本</th><th>公式</th><th>生效日</th>
+      <th>责任人</th><th>单位</th><th>说明</th></tr></thead><tbody><tr><td>v2</td><td><code>same-store-net</code></td><td>2026-07-01</td><td>analytics</td><td>cny_10k</td><td>同范围实体（含已确认搬迁续体）净额同比；范围须经治理与渠道确认</td></tr></tbody></table>
+      </div>
+    <h2>发布与重开判定</h2><div class="card pub reopen"><div class="row-head"><b>R3 2026-Q3：4.3% → -4.3%</b><span class="badge reopen">🔴 应重开</span></div><ul class="why"><li>追溯修正 C-STORE-1（store_status）：S2 不是纯新增门店，而是 S0 搬迁续体；Q3 可比口径应配对 S0 基期与 S2 本期</li><li>可比范围新增匹配主体：JD, S0→S2（迟到数据或谱系修正）</li><li>当前仍存在覆盖缺口：XHS(partial)</li></ul></div><div class="advice blocked"><span class="badge blocked">⛔ R3 应重开：原结论暂停用于下月资源决策</span></div>
+    <div class="card"><h3>同比桥接与覆盖</h3>
+    <div class="cards">
+      <div class="tile"><div class="k">基期 2025-Q3</div>
+        <div class="v">1,010</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">总变动</div>
+        <div class="v delta-pos">+9.0%</div>
+        <div class="s">Δ 91</div></div>
+      <div class="tile"><div class="k">本期 2026-Q3</div>
+        <div class="v">1,101</div><div class="s">周边界内合计</div></div>
+      <div class="tile"><div class="k">可比实体同比</div>
+        <div class="v delta-neg">-4.3%</div>
+        <div class="s">JD、S0→S2、S1、TM</div></div>
+    </div><div class="bars" role="img" aria-label="同比变动发散条形图"><div class="brow"><div class="blabel">可比业务变化（同范围门店/平台与续接商品）</div><div class="track"><div class="bar neg" style="width:33.75%" data-tip="可比业务变化（同范围门店/平台与续接商品）：-108.0（基 915.0 / 本 807.0），明细 12 行"></div></div><div class="bval delta-neg">-108.0</div></div><div class="brow"><div class="blabel">组合变化·新品/新规格贡献</div><div class="track"><div class="bar pos" style="width:50.00%" data-tip="组合变化·新品/新规格贡献：+160.0（基 0.0 / 本 160.0），明细 4 行"></div></div><div class="bval delta-pos">+160.0</div></div><div class="brow"><div class="blabel">组合变化·退市/收缩商品</div><div class="track"><div class="bar neg" style="width:29.69%" data-tip="组合变化·退市/收缩商品：-95.0（基 95.0 / 本 0.0），明细 4 行"></div></div><div class="bval delta-neg">-95.0</div></div><div class="brow"><div class="blabel">经营范围扩大（新门店/新平台）</div><div class="track"><div class="bar pos" style="width:41.88%" data-tip="经营范围扩大（新门店/新平台）：+134.0（基 0.0 / 本 134.0），明细 1 行"></div></div><div class="bval delta-pos">+134.0</div></div></div>
+    <details><summary class="note" style="cursor:pointer">查看桥接数据表（精确可加）</summary>
+    <table><thead><tr><th>变动来源</th><th class="num">基期</th>
+    <th class="num">本期</th><th class="num">对 Δ 贡献</th></tr></thead>
+    <tbody><tr><td>可比业务变化（同范围门店/平台与续接商品）</td><td class="num">915</td><td class="num">807</td><td class="num delta-neg">-108.0</td></tr><tr><td>组合变化·新品/新规格贡献</td><td class="num">0</td><td class="num">160</td><td class="num delta-pos">+160.0</td></tr><tr><td>组合变化·退市/收缩商品</td><td class="num">95</td><td class="num">0</td><td class="num delta-neg">-95.0</td></tr><tr><td>经营范围扩大（新门店/新平台）</td><td class="num">0</td><td class="num">134</td><td class="num delta-pos">+134.0</td></tr>
+    <tr><td><b>合计 Δ</b></td><td class="num">1,010</td>
+    <td class="num">1,101</td>
+    <td class="num"><b>+91.0</b></td></tr></tbody></table></details><p class="note">调节备忘：缺口/部分覆盖主体基期可见金额 0、本期可见金额 18 已移出桥接；它们是真实存在但不完整的报送，不是零。</p><div class="gapbox">🧩 <b>覆盖部分期间：XHS</b> — 应报 2 个月 [&#x27;2026-08&#x27;, &#x27;2026-09&#x27;]，实有 [&#x27;2026-08&#x27;]。仅覆盖 1/2 个应报月份。该主体两侧均移出桥接，<b>绝不按 0 处理</b>。</div><div class="gapbox">⚡ 未裁决冲突：<code>revenue|2026-08|DY|P2</code>，冲突单元格未计入。</div></div>
+    <h2>范围 / 分类登记</h2>
+    <div class="card"><table><thead><tr><th>实体</th><th>类型</th><th>归属</th>
+      <th>状态</th><th>区间</th><th>版本</th></tr></thead><tbody><tr><td>S1</td><td>store</td><td>east</td><td>comparable</td><td>2024-01-01 ~ 至今</td><td>v1</td></tr><tr><td>S0</td><td>store</td><td>west</td><td>comparable</td><td>2024-01-01 ~ 2026-06-30</td><td>v1</td></tr><tr><td>S0</td><td>store</td><td>west</td><td>closed</td><td>2026-07-01 ~ 至今</td><td>v1</td></tr><tr><td>S2</td><td>store</td><td>west</td><td>new</td><td>2026-07-01 ~ 至今</td><td>v1</td></tr><tr><td>TM</td><td>platform</td><td>online</td><td>comparable</td><td>2024-01-01 ~ 至今</td><td>v1</td></tr><tr><td>JD</td><td>platform</td><td>online</td><td>comparable</td><td>2024-01-01 ~ 至今</td><td>v1</td></tr><tr><td>DY</td><td>platform</td><td>online</td><td>new</td><td>2026-04-01 ~ 至今</td><td>v1</td></tr><tr><td>XHS</td><td>platform</td><td>online</td><td>new</td><td>2026-08-01 ~ 至今</td><td>v1</td></tr></tbody></table></div>
+    <h2>追溯修正</h2><div class="card"><ul class="why"><li><code>C-STORE-1</code> [store_status] S2 不是纯新增门店，而是 S0 搬迁续体；Q3 可比口径应配对 S0 基期与 S2 本期</li></ul></div>
+    <h2>当前待处理</h2><div class="card"><table><thead><tr><th>类型</th><th>对象</th>
+      <th>事项</th><th>责任人</th><th>状态</th></tr></thead><tbody><tr><td>action</td><td>A3</td><td>催交京东 Q3 结算文件并复核可比门店范围</td><td>陈澈（经营分析）</td><td>review</td></tr><tr><td>confirmation</td><td>P5:new-line:</td><td>待确认product谱系：P5 new-line </td><td>product-owner</td><td>pending</td></tr></tbody></table></div>
+    
+<div class="foot">治理原则：可比部分与范围/组合变化分开呈现；缺失渠道不默认为零；
+原始发布快照与行动完成记录只读保留；追溯修正通过新版本叠加并触发重开判定。</div>
+</div><div id="tip"></div><script>
+const tip=document.getElementById('tip');
+document.addEventListener('mousemove',e=>{
+  const t=e.target.closest('[data-tip]');
+  if(t){tip.style.display='block';tip.textContent=t.getAttribute('data-tip');
+    tip.style.left=Math.min(e.clientX+14,innerWidth-340)+'px';
+    tip.style.top=(e.clientY+14)+'px';}
+  else tip.style.display='none';
+});
+function toggleTheme(){
+  const r=document.documentElement;
+  r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+</script></body></html>

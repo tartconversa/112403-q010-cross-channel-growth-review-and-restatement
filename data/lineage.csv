@@ -1,0 +1,5 @@
+entity,kind,relation,related,from,confirmed,note
+S2,store,relocated-from,S0,2026-07-01,false,原址租约到期；渠道负责人 10-18 才确认会员/库存/小票主体延续
+P5,product,new-line,,2026-04-01,false,大促组合装是否算全新产品线尚待商品负责人确认
+P5,product,bundle-of,P1,2026-04-01,true,套装内含 P1 精华
+P1,product,successor-of,P0,2025-01-01,true,P1 为 P0 升级款；年度同比已按续接关系匹配

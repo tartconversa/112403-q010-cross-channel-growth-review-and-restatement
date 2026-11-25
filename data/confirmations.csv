@@ -1,0 +1,13 @@
+subject_type,subject_key,role,person,decision,on,note
+definition,revenue:v1,governance,孙敏（指标治理）,confirmed,2026-01-05,收入定义与财务 settled-sales 对齐
+definition,members:v1,governance,孙敏（指标治理）,confirmed,2026-01-05,发布时采用 CRM L1 图谱
+definition,comparable-sales:v2,governance,孙敏（指标治理）,confirmed,2026-07-01,同店净额口径生效
+store,S1,channel-owner,赵磊（渠道负责人）,confirmed,2026-01-08,门店与平台状态核对无误
+platform,TM,channel-owner,赵磊（渠道负责人）,confirmed,2026-01-08,
+platform,JD,channel-owner,赵磊（渠道负责人）,confirmed,2026-01-08,
+platform,DY,channel-owner,赵磊（渠道负责人）,confirmed,2026-04-02,新平台状态已登记
+platform,XHS,channel-owner,赵磊（渠道负责人）,confirmed,2026-08-02,8 月新上线；Q3 数据仅部分期间，已催报 9 月
+scope,2026-Q2-comparable,governance,孙敏（指标治理）,confirmed,2026-07-20,Q2 范围与冲突裁决完成
+category-migration,P1:v2,product-owner,钱芳（商品负责人）,confirmed,2026-07-25,当时确认 8 月起 P1 归入 skincare
+lineage,S2:relocated-from:S0,channel-owner,赵磊（渠道负责人）,confirmed,2026-10-18,追溯核实为同一经营主体搬迁；Q3 可比范围需重算
+category-migration,P1:v3,product-owner,钱芳（商品负责人）,confirmed,2026-10-21,P1 实为仪器+精华组合装，追溯改入 sets 并同步重述比较期

@@ -1,0 +1,5 @@
+report,metric,period,value,definition,action,state,compare_period,published_on,owner,conclusion,snapshot
+R1,revenue,2026-Q2,12.4%,v1,A1,issued,2025-Q2,2026-07-15,周正（财务）,Q2 总收入同比 +12.4%，管理层拟据此追加 Q3 市场与备货预算,snapshots/R1.json
+R2,members,2026-Q2,8.1%,v1,A2,complete,2025-Q2,2026-07-16,李娟（CRM）,L1 口径活跃会员 37→40（+8.1%），会员增长结论用于下月投放人群包预算,snapshots/R2.json
+R3,comparable-sales,2026-Q3,4.3%,v2,A3,review,2025-Q3,2026-10-12,陈澈（经营分析）,快报口径可比销售 +4.3%，判断同店经营回暖；京东数据未到，结论先进入复核,snapshots/R3.json
+R4,category-growth,2026-Q3,14.8%,v1,A4,issued,2025-Q3,2026-10-15,钱芳（商品负责人）,按 v2 分类护肤品类同比 +14.8%，品类升级结论拟用于下月陈列与备货倾斜,snapshots/R4.json

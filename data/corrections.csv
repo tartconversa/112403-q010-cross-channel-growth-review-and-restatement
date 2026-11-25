@@ -1,0 +1,4 @@
+correction_id,domain,target,summary,detected_on,effective_from,new_version,status,owner
+C-MEM-1,member_identity,members,L2 身份图谱修复一处错误合并（两人并一人）与两处漏合并（同一人多账号未并），需重算 Q2 去重会员,2026-10-16,2025-01-01,L2,confirmed,李娟（CRM）
+C-STORE-1,store_status,S2,S2 不是纯新增门店，而是 S0 搬迁续体；Q3 可比口径应配对 S0 基期与 S2 本期,2026-10-18,2026-07-01,,confirmed,赵磊（渠道负责人）
+C-PROD-1,product_classification,P1,P1 在 v2 被误归 skincare；v3 追溯重分类为 sets（组合装），2025-Q3 比较期同步重述,2026-10-19,2025-07-01,v3,confirmed,钱芳（商品负责人）

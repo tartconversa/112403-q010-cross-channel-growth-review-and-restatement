@@ -1,0 +1,125 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>指标档案 · members</title><style>
+:root{
+  color-scheme: light;
+  --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e;
+  --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --pos:#2a78d6; --neg:#e34948; --total:#52514e;
+  --good:#0a7d0a; --warn:#9a6b00; --serious:#b5481f; --critical:#b3261e;
+  --good-bg:#e8f5e8; --warn-bg:#fdf3d8; --critical-bg:#fbe6e4; --cond-bg:#e8f1fc;
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface:#1a1a19; --page:#0d0d0d; --ink:#f0efec; --ink2:#c3c2b7;
+  --muted:#898781; --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.12);
+  --pos:#3987e5; --neg:#e66767; --total:#c3c2b7;
+  --good:#34b334; --warn:#e0a92e; --serious:#ec835a; --critical:#e66767;
+  --good-bg:#143014; --warn-bg:#33280a; --critical-bg:#3a1715; --cond-bg:#12263f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+ font:14px/1.6 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+ border-bottom:1px solid var(--grid);padding-bottom:16px;margin-bottom:22px;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 4px} h2{font-size:17px;margin:34px 0 12px}
+h3{font-size:15px;margin:18px 0 8px}
+.sub{color:var(--ink2);font-size:13px}
+nav.toc{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pos);text-decoration:none;border:1px solid var(--border);
+ padding:3px 10px;border-radius:999px;background:var(--surface)}
+nav.toc a:hover{border-color:var(--pos)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.tile .k{color:var(--ink2);font-size:12.5px}.tile .v{font-size:26px;font-weight:650;margin-top:2px;
+ font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+ padding:18px 20px;margin:14px 0}
+.pub{border-left:4px solid var(--axis)}
+.pub.reopen{border-left-color:var(--critical)}
+.pub.stable{border-left-color:var(--good)}
+.pub.watch{border-left-color:var(--warn)}
+.row-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.title{font-weight:650;font-size:15.5px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+ padding:3px 10px;border-radius:999px;white-space:nowrap}
+.badge.blocked,.badge.reopen{color:var(--critical);background:var(--critical-bg)}
+.badge.conditional,.badge.watch{color:var(--warn);background:var(--warn-bg)}
+.badge.ready,.badge.stable{color:var(--good);background:var(--good-bg)}
+.concl{margin:8px 0;color:var(--ink)}
+.orig{color:var(--ink2);font-size:13px}
+.why{margin:8px 0;padding-left:0;list-style:none}
+.why li{padding:3px 0 3px 20px;position:relative}
+.why li:before{content:"·";position:absolute;left:8px;color:var(--muted);font-weight:700}
+.advice{border-radius:8px;padding:10px 14px;margin-top:10px;font-size:13.5px}
+.advice.ready{background:var(--good-bg)} .advice.conditional{background:var(--cond-bg)}
+.advice.blocked{background:var(--critical-bg)}
+.advice .use{margin:6px 0 0}.tag{display:inline-block;font-size:11.5px;border-radius:5px;
+ padding:1px 7px;margin-right:6px;font-weight:600}
+.tag.yes{background:var(--good-bg);color:var(--good)} .tag.no{background:var(--critical-bg);color:var(--critical)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:10px 0}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
+th{color:var(--ink2);font-weight:600;font-size:12.5px;background:transparent}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+.pill{font-size:11.5px;padding:1px 8px;border-radius:999px;border:1px solid var(--border);color:var(--ink2)}
+/* diverging bar bridge */
+.bars{margin:14px 0 6px}
+.brow{display:grid;grid-template-columns:minmax(190px,280px) 1fr 96px;gap:12px;align-items:center;
+ padding:5px 0}
+.blabel{font-size:12.8px;color:var(--ink2)}
+.track{position:relative;height:18px}
+.track:before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--axis)}
+.bar{position:absolute;top:2px;height:14px;border-radius:3px;min-width:2px;cursor:default}
+.bar.pos{left:50%;background:var(--pos)}
+.bar.neg{right:50%;background:var(--neg)}
+.bval{text-align:right;font-size:12.8px;font-variant-numeric:tabular-nums;font-weight:600}
+.delta-pos{color:var(--pos)} .delta-neg{color:var(--neg)}
+.note{font-size:12.5px;color:var(--ink2);margin:6px 0}
+.gapbox{border:1px dashed var(--serious);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:13px}
+.foot{margin-top:40px;color:var(--muted);font-size:12px;border-top:1px solid var(--grid);padding-top:14px}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:8px;
+ padding:5px 12px;font-size:12.5px;cursor:pointer}
+.btn:hover{border-color:var(--pos)}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);
+ font-size:12px;padding:6px 9px;border-radius:6px;max-width:320px;display:none;z-index:9;
+ box-shadow:0 4px 16px rgba(0,0,0,.25)}
+@media (max-width:720px){.brow{grid-template-columns:130px 1fr 74px}.wrap{padding:18px 12px 60px}}
+</style></head>
+<body><div class="wrap">
+<header class="top"><div><h1>指标档案 · members</h1>
+<div class="sub">合成数据 · 仅使用 Python 标准库 · 数字单位以指标登记为准（示例为万元 / 人 / %）</div>
+</div><button class="btn" onclick="toggleTheme()">🌓 切换明暗</button></header>
+
+    <nav class="toc"><a href="../dashboard.html">← 返回总览</a></nav>
+    <h2>口径定义</h2>
+    <div class="card"><table><thead><tr><th>版本</th><th>公式</th><th>生效日</th>
+      <th>责任人</th><th>单位</th><th>说明</th></tr></thead><tbody><tr><td>v1</td><td><code>deduplicated-active</code></td><td>2026-01-01</td><td>crm</td><td>persons</td><td>按当期指定会员关联版本去重后的活跃会员数</td></tr></tbody></table>
+      </div>
+    <h2>发布与重开判定</h2><div class="card pub reopen"><div class="row-head"><b>R2 2026-Q2：8.1% → 2.6%</b><span class="badge reopen">🔴 应重开</span></div><ul class="why"><li>追溯修正 C-MEM-1（member_identity）：L2 身份图谱修复一处错误合并（两人并一人）与两处漏合并（同一人多账号未并），需重算 Q2 去重会员</li><li>会员去重版本由 L1 追溯修订为 L2：去重人数 38→39（本期）</li></ul></div><div class="advice blocked"><span class="badge blocked">⛔ R2 应重开：原结论暂停用于下月资源决策</span></div>
+    <div class="card"><h3>会员去重（L2）</h3><p>38 → 39，同比 +2.6%</p></div>
+    <h2>范围 / 分类登记</h2>
+    <div class="card"><table><thead><tr><th>实体</th><th>类型</th><th>归属</th>
+      <th>状态</th><th>区间</th><th>版本</th></tr></thead><tbody></tbody></table></div>
+    <h2>追溯修正</h2><div class="card"><ul class="why"><li><code>C-MEM-1</code> [member_identity] L2 身份图谱修复一处错误合并（两人并一人）与两处漏合并（同一人多账号未并），需重算 Q2 去重会员</li></ul></div>
+    <h2>当前待处理</h2><div class="card"><table><thead><tr><th>类型</th><th>对象</th>
+      <th>事项</th><th>责任人</th><th>状态</th></tr></thead><tbody><tr><td colspan=5>无</td></tr></tbody></table></div>
+    
+<div class="foot">治理原则：可比部分与范围/组合变化分开呈现；缺失渠道不默认为零；
+原始发布快照与行动完成记录只读保留；追溯修正通过新版本叠加并触发重开判定。</div>
+</div><div id="tip"></div><script>
+const tip=document.getElementById('tip');
+document.addEventListener('mousemove',e=>{
+  const t=e.target.closest('[data-tip]');
+  if(t){tip.style.display='block';tip.textContent=t.getAttribute('data-tip');
+    tip.style.left=Math.min(e.clientX+14,innerWidth-340)+'px';
+    tip.style.top=(e.clientY+14)+'px';}
+  else tip.style.display='none';
+});
+function toggleTheme(){
+  const r=document.documentElement;
+  r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+</script></body></html>

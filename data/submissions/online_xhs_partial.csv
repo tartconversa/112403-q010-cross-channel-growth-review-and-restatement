@@ -1,0 +1,2 @@
+fact_id,team,metric,period,entity,sku,value,basis,submitted_on,received_on,batch,note
+F-XHS-202608-P2,online,revenue,2026-08,XHS,P2,18,settled-sales,2026-10-05,2026-10-05,online-xhs-partial,季度文件仅覆盖至 8 月

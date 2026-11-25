@@ -1,0 +1,5 @@
+team,basis,date_field,boundary,recognition_lag_days,fiscal_calendar,note
+finance,settled-sales,settlement_date,结算日落在哪季即归哪季,5,calendar,财务与 R1 发布采用 v1 口径；月末 T+5 结算跨期会与业务下单口径产生 cut-off 差
+online,order-date-gmv,order_date,下单日落在哪季即归哪季,0,calendar,电商团队过程指标口径；大促下单与结算跨月时不得直接与 settled-sales 混用
+offline,pos-date-net,pos_date,收银日落在哪季即归哪季,0,calendar,门店 POS 净额；退换在实际发生日冲减
+crm,activity-month,activity_month,会员活跃行为所在自然月,0,calendar,去重依赖会员关联版本 L1/L2；不同版本人数不可直接比较

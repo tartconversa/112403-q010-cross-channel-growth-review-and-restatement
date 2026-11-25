@@ -1,0 +1,25 @@
+{
+  "report": "R3",
+  "metric": "comparable-sales",
+  "period": "2026-Q3",
+  "compare_period": "2025-Q3",
+  "published_on": "2026-10-12",
+  "definition": "v2",
+  "headline": "4.3%",
+  "headline_numeric": 4.3,
+  "unit": "YoY %",
+  "scope_basis": "publish-time flash: facts received_on <= 2026-10-12",
+  "scope_entities": ["S1", "TM"],
+  "scope_excluded": [
+    {"entity": "JD", "reason": "current-quarter file not received until 2026-10-20"},
+    {"entity": "S2", "reason": "registered as new store; S0->S2 relocation not confirmed until 2026-10-18"},
+    {"entity": "S0", "reason": "closed 2026-06-30, treated as scope contraction"},
+    {"entity": "DY", "reason": "new platform, outside same-store definition"}
+  ],
+  "bridge_published": {"base_total": 600, "current_total": 626, "delta": 26},
+  "conclusion": "快报口径可比销售 +4.3%，判断同店经营回暖。",
+  "owner": "陈澈（经营分析）",
+  "action": "A3",
+  "applied_corrections": [],
+  "fingerprint": "r3-2026q3-flash-scope-s1-tm"
+}
